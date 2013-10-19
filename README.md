@@ -7,6 +7,26 @@ Work with a WebSocket in the client and the server even if the transport is impl
 
 Strictly provide a WebSocket interface in the browser while also only handling a true WebSocket connection on the backend server via a middleman relay (polysocket-relay).
 
+```
+    [browser]
+        /\
+        ||
+        ||  (WebSocket interface)
+        \/
+    [WebSocket :: polysocket-long-polling, pollysocket-xhr, ...]
+        /\
+        ||
+        ||  (Whatever transport PolySocket finds best for your network/browser)
+        \/
+    [polysocket-relay] - scaling, sticky sessions, hard problems
+        /\
+        ||
+        ||  (pure WebSocket connection, no shenanigans)
+        \/
+    [WebSocket Server] - whatever language you desire (just a websocket library)
+    
+```
+
 ## why
 
 This allows a standard interface to duplex streams in the browser to the server upon which good reliable libraries can be built, while still allowing browsers/networks that don't accomodate WebSockets to operate.
