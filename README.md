@@ -39,6 +39,10 @@ You are also free to implement your backend in your language of preference.
 
 Client-side javascript library PolySocket which strictly implements a WebSocket but may use other mechanisms to connect to a polysocket-relay server (which understands multiple transports). The polysocket-relay then opens and maintains a pure websocket to the backend server.
 
+## websocket
+
+http://dev.w3.org/html5/websockets/#the-websocket-interface
+
 ## license
 
 MIT
