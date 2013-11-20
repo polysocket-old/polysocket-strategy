@@ -1,48 +1,35 @@
 polysocket
 ==========
 
-Work with a WebSocket in the client and the server even if the transport is implemented differently.
+PolySocket provides a strict WebSocket polyfill. In the browser and on the server-side, you will feel like you are using raw WebSockets, even if the browser doesn't support it (or a different transport is selected because of network conditions).
 
-## what
+This lets you simplify your code!
 
-Strictly provide a WebSocket interface in the browser while also only handling a true WebSocket connection on the backend server via a middleman relay (polysocket-relay).
+This also lets us start to build on-top of WebSockets instead besides them. Socket-io/SockJS/Primus/Faye do fantastic jobs, but once you start using them, you're locked in (and restricted to their implemented back-end languages).
 
-```
-    [browser]
-        /\
-        ||
-        ||  (WebSocket interface)
-        \/
-    [WebSocket :: polysocket-long-polling, pollysocket-xhr, ...]
-        /\
-        ||
-        ||  (Whatever transport PolySocket finds best for your network/browser)
-        \/
-    [polysocket-relay] - scaling, sticky sessions, hard problems
-        /\
-        ||
-        ||  (pure WebSocket connection, no shenanigans)
-        \/
-    [WebSocket Server] - whatever language you desire (just a websocket library)
-    
-```
+Do you really want to program in raw WebSockets? Probably not. But, if we can now rely on the WebSocket standard being available in all of our clients, we can start to build interesting libraries on top of WebSockets.
 
-## why
+Oh, and this is easier (aka possible) to scale. Tell your boss.
 
-This allows a standard interface to duplex streams in the browser to the server upon which good reliable libraries can be built, while still allowing browsers/networks that don't accomodate WebSockets to operate.
+## How
 
-This also simplifies the backend application as only WebSockets ard handled, and the problems of scaling/routing/distributing the different long-polling, hacks, etc... is handled for you without complicating your stack.
+If your browser supports WebSockets and the network is happy with you, just connect to your WebSocket server.
 
-You are also free to implement your backend in your language of preference.
+If you can't use WebSocket in the browser, PolySocket emulates a WebSocket connection to a PolySocket Relay server (you can host this yourself). The Relay server then connects to your WebSocket server with a true beautiful WebSocket.
 
-## how
+This means, no matter how crummy your customer's browsers and networks are (firewalls/caches/wireless are still WebSocket problems), you get to deal with WebSockets on the backend.
 
-Client-side javascript library PolySocket which strictly implements a WebSocket but may use other mechanisms to connect to a polysocket-relay server (which understands multiple transports). The polysocket-relay then opens and maintains a pure websocket to the backend server.
+So, this does require an extra piece of server: the relay. Ideally, one day you won't need this relay server, or PolySocket, but that day isn't quite here yet.
 
-## websocket
+## Transports
 
-http://dev.w3.org/html5/websockets/#the-websocket-interface
+We offer 3 transports: WebSockets (uses no PolySocket), xhr-streaming, and jsonp-polling.
 
-## license
+Between those three, we can support all browsers.
 
-MIT
+## Projects
+
+* polysocket - (this project) the client-side polyfill that decides which transport to use
+* polysocket-xhr-streaming - the xhr streaming implementation of the websocket interface (via polysocket-relay)
+* polysocket-jsonp-polling - the jsonp polling implementation of the websocket interface (via polysocket-relay)
+* polysocket-relay - the server that enables our non-websocket websockets to make websocket connections to your websocket server (meow)
